@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+
+  <title>passcode page💕</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      margin: 0;
+      background: linear-gradient(180deg, #FFF7F8, #FFECEF);
+      font-family: "Quicksand", sans-serif;
+      color: #5A4A52;
+      height: 100vh;
+      height: 100dvh;
+      overflow: hidden;
+      position: relative;
+    }
+    .passcode {
+      transition: transform 0.2s ease;
+      position: relative;
+      z-index: 2;
+    }
+    .display {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin: 30px 0;
+    }
+    .top {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: #5B4B42;
+    }
+    .gif {
+      width: 180px;
+      height: auto;
+      margin-top: 20px;
+      animation: lompat 2s infinite ease-in-out;
+    }
+    .bubble {
+      width: 12px;
+      height: 12px;
+      border: 2px solid #F8BBD0;
+      border-radius: 50%;
+      transition: .2s ease;
+    }
+    .bubble.active {
+      background: #FF6FA3;
+      border: 2px solid #FF6FA3;
+      transform: scale(1.2);
+    }
+    .bubble.error {
+      background: #FF4D4D;
+      border: 2px solid #FF4D4D;
+    }
+    .keypad {
+      display: grid;
+      grid-template-columns: repeat(3, 70px);
+      gap: 15px;
+      justify-content: center;
+    }
+    .keypad button {
+      width: 70px;
+      height: 55px;
+      border: none;
+      border-radius: 16px;
+      background: white;
+      color: #FF6FA3;
+      font-size: 22px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 8px 18px rgba(255, 111, 163, .18);
+      transition: .2s;
+    }
+    .keypad button:hover {
+      transform: translateY(-3px);
+      background: #FFF3F7;
+    }
+    .keypad button:active {
+      transform: scale(.93);
+    }
+    .clue {
+      text-align: center;
+      color: #A68A94;
+      margin-top: 30px;
+      font-size: 14px;
+    }
+    .popup {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .4);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+      z-index: 10;
+    }
+    .popup.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .popup-box {
+      width: 300px;
+      background: white;
+      padding: 25px;
+      border-radius: 20px;
+      text-align: center;
+      margin: 10px;
+      transform: scale(0.7);
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .popup.show .popup-box {
+      transform: scale(1);
+    }
+    .next-btn {
+      margin-top: 15px;
+      background: #FF6FA3;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(255,111,163,.3);
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .top, .display, .keypad, .clue {
+      opacity: 0;
+      animation: fadeInUp 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+    .top { animation-delay: 0.1s; }
+    .display { animation-delay: 0.3s; }
+    .keypad { animation-delay: 0.5s; }
+    .clue { animation-delay: 0.7s; }
+
+    @keyframes lompat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-10px); }
+      40%, 80% { transform: translateX(10px); }
+    }
+
+    .custom-decor {
+      position: fixed;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0;
+      animation: fadeInDecor 1s ease forwards 0.6s;
+    }
+
+    .decor-flower1 {
+      top: 15px;
+      left: 10px;
+      width: 90px;
+      transform-origin: top left;
+      animation: fadeInDecor 1s ease forwards 0.6s, sway 4s ease-in-out infinite alternate;
+    }
+
+    .decor-flower2 {
+      bottom: 15px;
+      right: 10px;
+      width: 110px;
+      transform-origin: bottom right;
+      animation: fadeInDecor 1s ease forwards 0.6s, sway 4.5s ease-in-out infinite alternate-reverse;
+    }
+
+    .decor-love1 {
+      top: 70px;
+      right: 15px;
+      width: 90px;
+      animation: fadeInDecor 1s ease forwards 0.6s, floatUp 3.5s ease-in-out infinite alternate;
+    }
+
+    .decor-love2 {
+      bottom: 120px;
+      left: 15px;
+      width: 50px;
+      animation: fadeInDecor 1s ease forwards 0.6s, floatUp 4s ease-in-out infinite alternate-reverse;
+    }
+
+    @keyframes fadeInDecor {
+      to { opacity: 0.9; }
+    }
+    @keyframes sway {
+      0% { transform: rotate(-3deg); }
+      100% { transform: rotate(5deg); }
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(0) scale(1); }
+      100% { transform: translateY(-10px) scale(1.05); }
+    }
+
+    .hearts span {
+      position: fixed;
+      top: -50px;
+      font-size: 24px;
+      animation: fall linear infinite;
+      opacity: .25;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .hearts span:nth-child(1){ left:5%; animation-duration:8s; }
+    .hearts span:nth-child(2){ left:15%; animation-duration:10s; animation-delay:2s; }
+    .hearts span:nth-child(3){ left:28%; animation-duration:9s; animation-delay:1s; }
+    .hearts span:nth-child(4){ left:40%; animation-duration:12s; }
+    .hearts span:nth-child(5){ left:52%; animation-duration:8.5s; animation-delay:3s; }
+    .hearts span:nth-child(6){ left:65%; animation-duration:11s; }
+    .hearts span:nth-child(7){ left:78%; animation-duration:9.5s; animation-delay:2s; }
+    .hearts span:nth-child(8){ left:88%; animation-duration:10s; }
+    .hearts span:nth-child(9){ left:95%; animation-duration:13s; }
+    .hearts span:nth-child(10){ left:55%; animation-duration:7s; }
+
+    @keyframes fall {
+      0% { transform: translateY(-100px) translateX(0px) rotate(0deg); }
+      25% { transform: translateY(25vh) translateX(15px) rotate(90deg); }
+      50% { transform: translateY(50vh) translateX(-15px) rotate(180deg); }
+      75% { transform: translateY(75vh) translateX(15px) rotate(270deg); }
+      100% { transform: translateY(110vh) translateX(-10px) rotate(360deg); }
+    }
+
+    .bloom-transition {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(180deg, #FFE1E7, #FFC7D3);
+      z-index: 999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      overflow: hidden;
+    }
+
+    .bloom-transition.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .bloom-petal {
+      position: absolute;
+      width: 64px;
+      height: 64px;
+      transform: translate(-50%, -50%) scale(0) rotate(-25deg);
+      opacity: 0;
+      transition: transform 0.55s cubic-bezier(0.2, 0.85, 0.25, 1.15), opacity 0.4s ease;
+      will-change: transform, opacity;
+    }
+
+    .bloom-petal img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .bloom-transition.active .bloom-petal {
+      transform: translate(-50%, -50%) scale(1.3) rotate(var(--rot, 0deg));
+      opacity: 1;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .bloom-petal {
+        transition: opacity 0.3s ease !important;
+        transform: translate(-50%, -50%) scale(1.15) !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bloom-transition" id="bloomTransition"></div>
+
+  <img class="custom-decor decor-flower1" src="bunga1.png" alt="bunga1">
+  <img class="custom-decor decor-flower2" src="bunga2.png" alt="bunga2">
+  <img class="custom-decor decor-love1" src="love1.png" alt="love1">
+  <img class="custom-decor decor-love2" src="love2.png" alt="love2">
+
+  <div class="hearts">
+    <span>💕</span><span>💖</span><span>🤍</span><span>💗</span><span>💞</span>
+    <span>💘</span><span>💝</span><span>💓</span><span>🌸</span><span>🩷</span>
+  </div>
+
+  <div class="passcode" id="passcodeSection">
+    <div class="top">
+      <img src="peach-goma.gif" class="gif">
+      <h2>tebak kodenya cil</h2>
+    </div>
+    <div class="display">
+      <span class="bubble"></span><span class="bubble"></span><span class="bubble"></span>
+      <span class="bubble"></span><span class="bubble"></span><span class="bubble"></span>
+    </div>
+    <div class="keypad">
+      <button>1</button><button>2</button><button>3</button>
+      <button>4</button><button>5</button><button>6</button>
+      <button>7</button><button>8</button><button>9</button>
+      <button class="delete">⌫</button><button>0</button>
+    </div>
+    <p class="clue">clue: your birthday</p>
+    <p style="text-align:center; margin-top:14px;">
+    </p>
+  </div>
+
+  <div class="popup" id="successPopup">
+    <div class="popup-box">
+      <h2>💖 Passcode Benarr!!</h2>
+      <p>iya donk masa tanggal lahir sendiri gatauw..
+      <br>
+      btw mau liat surat akuu gaa💕</p>
+      <button class="next-btn" onclick="nextPage()">Open My Letter 💌</button>
+    </div>
+  </div>
+
+  <script>
+    const tombol = document.querySelectorAll(".keypad button");
+    const bubbles = document.querySelectorAll(".bubble");
+    const passcodeSection = document.getElementById("passcodeSection");
+    const popup = document.getElementById("successPopup");
+    let password = "";
+
+    tombol.forEach(btn => {
+      btn.addEventListener("click", () => {
+        let nilai = btn.textContent;
+
+        if (nilai === "⌫") {
+          if (password.length > 0) password = password.slice(0, -1);
+        } else if (password.length < 6) {
+          password += nilai;
+        }
+
+        updateBubbles();
+
+        if (password.length === 6) {
+          if (password === "201447") {
+            popup.classList.add("show");
+          } else {
+            triggerError();
+          }
+        }
+      });
+    });
+
+    function updateBubbles() {
+      bubbles.forEach((item, index) => {
+        if (index < password.length) {
+          item.classList.add("active");
+        } else {
+          item.classList.remove("active");
+        }
+      });
+    }
+
+    function triggerError() {
+      passcodeSection.style.animation = "shake 0.4s ease";
+      bubbles.forEach(b => b.classList.add("error"));
+
+      setTimeout(() => {
+        passcodeSection.style.animation = "";
+        password = "";
+        bubbles.forEach(b => b.classList.remove("error"));
+        updateBubbles();
+      }, 500);
+    }
+
+    function buildBloom() {
+      const wrap = document.getElementById("bloomTransition");
+      wrap.innerHTML = "";
+      const cols = 5;
+      const rows = 8;
+      const flowerFiles = ["flower1.png", "flower2.png", "flower3.png", "flower4.png", "flower5.png", "flower6.png"];
+      const centerCol = (cols - 1) / 2;
+      const centerRow = (rows - 1) / 2;
+      let maxDist = 0;
+
+      const cells = [];
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          const dist = Math.hypot(c - centerCol, r - centerRow);
+          maxDist = Math.max(maxDist, dist);
+          cells.push({ r, c, dist });
+        }
+      }
+
+      cells.forEach(cell => {
+        const el = document.createElement("span");
+        el.className = "bloom-petal";
+
+        const baseLeft = (cell.c / (cols - 1)) * 100;
+        const baseTop = (cell.r / (rows - 1)) * 100;
+        const jitterX = (Math.random() - 0.5) * 16;
+        const jitterY = (Math.random() - 0.5) * 11;
+
+        el.style.left = (baseLeft + jitterX) + "%";
+        el.style.top = (baseTop + jitterY) + "%";
+
+        const size = 130 + Math.random() * 70;
+        el.style.width = size + "px";
+        el.style.height = size + "px";
+        el.style.setProperty("--rot", (Math.random() * 34 - 17) + "deg");
+        el.style.transitionDelay = (cell.dist / maxDist * 420) + "ms";
+        el.style.zIndex = Math.round(size);
+
+        const img = document.createElement("img");
+        const file = flowerFiles[Math.floor(Math.random() * flowerFiles.length)];
+        img.src = file;
+        img.alt = "bunga";
+        img.onerror = function () {
+          el.textContent = "🌸";
+          el.style.fontSize = size * 0.65 + "px";
+          el.style.lineHeight = "1";
+        };
+        el.appendChild(img);
+        wrap.appendChild(el);
+      });
+    }
+
+    buildBloom();
+
+    function nextPage() {
+      const bloom = document.getElementById("bloomTransition");
+      bloom.classList.add("active");
+
+      setTimeout(() => {
+        window.location.href = "surat.html";
+      }, 950);
+    }
+  </script>
+</body>
+</html>
